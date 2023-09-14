@@ -24,7 +24,49 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+//--------------------
+// Solution starts from here
+// when endpoint has a time value
 
+app.get("/api/:date", function(req,res) {
+  let inputString=(req.params.date);
+// checking inputString whether string or number
+  if(isNaN(inputString)){
+
+    let dateString=new Date(inputString);
+    // checking whether it is valid string for date or not
+    if(dateString.toUTCString()==="Invalid Date") { 
+      res.json({
+        error: "Invalid Date"
+      })
+    }
+    else {
+      res.json({
+        unix: dateString.getTime(),
+        utc: dateString.toUTCString()
+      })
+    }  
+  } else {
+    dateString=new Date(Number(inputString));
+    res.json({
+      unix: dateString.getTime(),
+      utc: dateString.toUTCString()
+    })
+  }
+    
+});
+
+// when empty time endpoint
+
+app.get("/api", function (req, res) {
+ // console.log(new Date());
+  res.json({
+    unix: new Date().getTime(),
+    utc: new Date().toUTCString()
+  });
+});
+
+//-----------------------------
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
